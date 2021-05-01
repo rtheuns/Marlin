@@ -67,6 +67,7 @@ void menu_cancelobject();
 void menu_motion();
 void menu_temperature();
 void menu_configuration();
+void menu_sheets();
 
 #if HAS_POWER_MONITOR
   void menu_power_monitor();
@@ -332,6 +333,12 @@ void menu_main() {
 
   #if HAS_TEMPERATURE
     SUBMENU(MSG_TEMPERATURE, menu_temperature);
+  #endif
+
+  #if ENABLED(SHEETS_FEATURE)
+    if (!printingIsActive() && !printingIsPaused()) {
+      SUBMENU(MSG_SHEETS, menu_sheets);
+    }
   #endif
 
   #if HAS_POWER_MONITOR

@@ -706,6 +706,11 @@ namespace Language_en {
   PROGMEM Language_Str MSG_BOTTOM_RIGHT                    = _UxGT("Bottom Right");
   PROGMEM Language_Str MSG_CALIBRATION_COMPLETED           = _UxGT("Calibration Completed");
   PROGMEM Language_Str MSG_CALIBRATION_FAILED              = _UxGT("Calibration Failed");
+
+  PROGMEM Language_Str MSG_SHEETS                          = _UxGT("Sheets");
+  PROGMEM Language_Str MSG_SHEET_ACTIVE                    = _UxGT("Active");
+  PROGMEM Language_Str MSG_SHEET_SETACTIVE                 = _UxGT("Set active");
+  PROGMEM Language_Str MSG_SHEET_ZOFFSET                   = _UxGT("Z offset");
 }
 
 #if FAN_COUNT == 1

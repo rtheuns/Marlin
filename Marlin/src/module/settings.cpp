@@ -36,7 +36,7 @@
  */
 
 // Change EEPROM version if the structure changes
-#define EEPROM_VERSION "V83"
+#define EEPROM_VERSION "V84"
 #define EEPROM_OFFSET 100
 
 // Check the integrity of data offsets.
@@ -151,6 +151,10 @@
 
 #if ENABLED(SOUND_MENU_ITEM)
   #include "../libs/buzzer.h"
+#endif
+
+#if ENABLED(SHEETS_FEATURE)
+  #include "../feature/sheets.h"
 #endif
 
 #if ENABLED(DGUS_LCD_UI_MKS)
@@ -448,6 +452,13 @@ typedef struct SettingsDataStruct {
   //
   #if ENABLED(TOUCH_SCREEN_CALIBRATION)
     touch_calibration_t touch_calibration_data;
+  #endif
+
+  //
+  // SHEETS_FEATURE
+  //
+  #if ENABLED(SHEETS_FEATURE)
+    sheets_settings_t sheets_settings;
   #endif
 
   // Ethernet settings
@@ -1394,6 +1405,16 @@ void MarlinSettings::postprocess() {
     #endif
 
     //
+    // Sheets feature
+    //
+    {
+      _FIELD_TEST(sheets_settings);
+      #if ENABLED(SHEETS_FEATURE)
+        EEPROM_WRITE(sheets.settings);
+      #endif
+    }
+
+    //
     // Ethernet network info
     //
     #if HAS_ETHERNET
@@ -2290,6 +2311,16 @@ void MarlinSettings::postprocess() {
         _FIELD_TEST(caselight_brightness);
         EEPROM_READ(caselight.brightness);
       #endif
+
+      //
+      // Sheets feature
+      //
+      {
+        #if ENABLED(SHEETS_FEATURE)
+          _FIELD_TEST(sheets_settings);
+          EEPROM_READ(sheets.settings);
+        #endif
+      }
 
       //
       // Password feature
@@ -3914,6 +3945,21 @@ void MarlinSettings::reset() {
         #endif
       );
     #endif
+
+    /**
+     * Sheets feature
+     */
+    #if ENABLED(SHEETS_FEATURE)
+      CONFIG_ECHO_HEADING("Active sheet:");
+      CONFIG_ECHO_START();
+      sheet_t activesheet = sheets.get_active_sheet();
+      SERIAL_ECHOLNPAIR(
+        "  sheet_nr=", activesheet.sheet_nr,
+        " name=", activesheet.name,
+        " z_offset=", activesheet.z_offset
+      );
+    #endif
+
 
     #if HAS_ETHERNET
       CONFIG_ECHO_HEADING("Ethernet:");

@@ -73,6 +73,10 @@
   #include "../../feature/mixing.h"
 #endif
 
+#if ENABLED(SHEETS_FEATURE)
+  #include "../../feature/sheets.h"
+#endif
+
 #define X_LABEL_POS      3
 #define X_VALUE_POS     11
 #define XYZ_SPACING     37
@@ -874,12 +878,35 @@ void MarlinUI::draw_status_screen() {
   #define EXTRAS_2_BASELINE (EXTRAS_BASELINE + 3)
 
   if (PAGE_CONTAINS(EXTRAS_2_BASELINE - INFO_FONT_ASCENT, EXTRAS_2_BASELINE - 1)) {
-    set_font(FONT_MENU);
-    lcd_put_wchar(3, EXTRAS_2_BASELINE, LCD_STR_FEEDRATE[0]);
+    // set_font(FONT_MENU);
+    // lcd_put_wchar(3, EXTRAS_2_BASELINE, LCD_STR_FEEDRATE[0]);
 
-    set_font(FONT_STATUSMENU);
-    lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(feedrate_percentage));
-    lcd_put_wchar('%');
+    // set_font(FONT_STATUSMENU);
+    // lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(feedrate_percentage));
+    // lcd_put_wchar('%');
+    #if ENABLED(SHEETS_FEATURE)
+      if (!printingIsActive() 
+          && !printingIsPaused() 
+          && SHEETS_SHOW_ON_STATUS_SCREEN == true 
+          && feedrate_percentage == 100) {
+        set_font(FONT_STATUSMENU);
+        lcd_put_u8str(0, EXTRAS_2_BASELINE, sheets.settings.sheets_list[sheets.settings.active_sheet].name);
+      } else {
+        set_font(FONT_MENU);
+        lcd_put_wchar(3, EXTRAS_2_BASELINE, LCD_STR_FEEDRATE[0]);
+
+        set_font(FONT_STATUSMENU);
+        lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(feedrate_percentage));
+        lcd_put_wchar('%');
+      }
+    #else
+      set_font(FONT_MENU);
+      lcd_put_wchar(3, EXTRAS_2_BASELINE, LCD_STR_FEEDRATE[0]);
+
+      set_font(FONT_STATUSMENU);
+      lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(feedrate_percentage));
+      lcd_put_wchar('%');
+    #endif
 
     //
     // Filament sensor display if SD is disabled
