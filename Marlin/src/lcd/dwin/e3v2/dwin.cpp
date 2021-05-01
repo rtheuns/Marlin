@@ -2381,10 +2381,12 @@ void Draw_AdvSet_Menu() {
   #endif
   if (AVISI(ADVSET_CASE_HEPID)) Draw_Menu_Line(ASCROL(ADVSET_CASE_HEPID), ICON_PIDNozzle, "Hotend PID", false);  // Nozzle PID
   if (AVISI(ADVSET_CASE_BEDPID)) Draw_Menu_Line(ASCROL(ADVSET_CASE_BEDPID), ICON_PIDbed, "Bed PID", false);  // Bed PID
-  if (AVISI(ADVSET_CASE_PWRLOSSR)) {
-    Draw_Menu_Line(ASCROL(ADVSET_CASE_PWRLOSSR), ICON_Motion, "Power-loss recovery", false);  // Power-loss recovery
-    Draw_Chkb_Line(ASCROL(ADVSET_CASE_PWRLOSSR), recovery.enabled);
-  }
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    if (AVISI(ADVSET_CASE_PWRLOSSR)) {
+      Draw_Menu_Line(ASCROL(ADVSET_CASE_PWRLOSSR), ICON_Motion, "Power-loss recovery", false);  // Power-loss recovery
+      Draw_Chkb_Line(ASCROL(ADVSET_CASE_PWRLOSSR), recovery.enabled);
+    }
+  #endif
   if (select_advset.now) Draw_Menu_Cursor(ASCROL(select_advset.now));
 }
 
@@ -3409,10 +3411,12 @@ void HMI_AdvSet() {
           break;
       #endif
 
-      case ADVSET_CASE_PWRLOSSR:  // Power-loss recovery
-        recovery.enable(!recovery.enabled);
-        Draw_Chkb_Line(ADVSET_CASE_PWRLOSSR + MROWS - index_advset, recovery.enabled);
-        break;
+      #if ENABLED(POWER_LOSS_RECOVERY)
+        case ADVSET_CASE_PWRLOSSR:  // Power-loss recovery
+          recovery.enable(!recovery.enabled);
+          Draw_Chkb_Line(ADVSET_CASE_PWRLOSSR + MROWS - index_advset, recovery.enabled);
+          break;
+      #endif
       default: break;
     }
   }
@@ -3461,13 +3465,13 @@ void HMI_AdvSet() {
     DWIN_UpdateLCD();
   }
 
-  void HMI_HomeOffN(float &posScaled, const_float_t lo, const_float_t hi) {
+  void HMI_HomeOffN(const AxisEnum axis, float &posScaled, const_float_t lo, const_float_t hi) {
     ENCODER_DiffState encoder_diffState = Encoder_ReceiveAnalyze();
     if (encoder_diffState != ENCODER_DIFF_NO) {
       if (Apply_Encoder(encoder_diffState, posScaled)) {
         checkkey = HomeOff;
         EncoderRate.enabled = false;
-        set_home_offset(X_AXIS, posScaled / 10);
+        set_home_offset(axis, posScaled / 10);
         DWIN_Draw_Signed_Float(font8x16, Color_Bg_Black, 3, 1, 216, MBASE(select_item.now), posScaled);
         return;
       }
@@ -3476,9 +3480,9 @@ void HMI_AdvSet() {
     }
   }
 
-  void HMI_HomeOffX() { HMI_HomeOffN(HMI_ValueStruct.Home_OffX_scaled, -500, 500); }
-  void HMI_HomeOffY() { HMI_HomeOffN(HMI_ValueStruct.Home_OffY_scaled, -500, 500); }
-  void HMI_HomeOffZ() { HMI_HomeOffN(HMI_ValueStruct.Home_OffZ_scaled,  -20,  20); }
+  void HMI_HomeOffX() { HMI_HomeOffN(X_AXIS, HMI_ValueStruct.Home_OffX_scaled, -500, 500); }
+  void HMI_HomeOffY() { HMI_HomeOffN(Y_AXIS, HMI_ValueStruct.Home_OffY_scaled, -500, 500); }
+  void HMI_HomeOffZ() { HMI_HomeOffN(Z_AXIS, HMI_ValueStruct.Home_OffZ_scaled,  -20,  20); }
 
 #endif // HAS_HOME_OFFSET
 
