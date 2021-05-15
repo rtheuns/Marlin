@@ -3282,6 +3282,17 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
 #endif
 
 /**
+ * Sanity Check for Sheets Feature
+ */
+#if ENABLED(SHEETS_FEATURE)
+  #if !HAS_LCD_MENU
+    #error "SHEETS_FEATURE requires a programmable LCD controller."
+  #elif DISABLED(BABYSTEP_ZPROBE_OFFSET)
+    #error "SHEETS_FEATURE requires BABYSTEP_ZPROBE_OFFSET"
+  #endif
+#endif
+
+/**
  * Sanity Check for MEATPACK and BINARY_FILE_TRANSFER Features
  */
 #if BOTH(HAS_MEATPACK, BINARY_FILE_TRANSFER)

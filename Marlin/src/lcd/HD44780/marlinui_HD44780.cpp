@@ -54,6 +54,10 @@
   #include "../../feature/bedlevel/bedlevel.h"
 #endif
 
+#if ENABLED(SHEETS_FEATURE)
+  #include "../../feature/sheets.h"
+#endif
+
 //
 // Create LCD instance and chipset-specific information
 //
@@ -925,9 +929,29 @@ void MarlinUI::draw_status_screen() {
 
     #if LCD_HEIGHT > 3
 
-      lcd_put_wchar(0, 2, LCD_STR_FEEDRATE[0]);
-      lcd_put_u8str(i16tostr3rj(feedrate_percentage));
-      lcd_put_wchar('%');
+      lcd_moveto(0, 2);
+      uint8_t lcdpos = 0;
+      while (lcdpos < LCD_WIDTH) {
+        lcd_put_wchar(' ');
+        ++lcdpos;
+      }
+
+      #if ENABLED(SHEETS_FEATURE)
+        if (!printingIsActive()
+          && !printingIsPaused()
+          && SHEETS_SHOW_ON_STATUS_SCREEN == true
+          && feedrate_percentage == 100) {
+          lcd_put_u8str(0, 2, sheets.settings.sheets_list[sheets.settings.active_sheet].name);
+        } else {
+          lcd_put_wchar(0, 2, LCD_STR_FEEDRATE[0]);
+          lcd_put_u8str(i16tostr3rj(feedrate_percentage));
+          lcd_put_wchar('%');
+        }
+      #else
+        lcd_put_wchar(0, 2, LCD_STR_FEEDRATE[0]);
+        lcd_put_u8str(i16tostr3rj(feedrate_percentage));
+        lcd_put_wchar('%');
+      #endif
 
       const uint8_t timepos = draw_elapsed_or_remaining_time(LCD_WIDTH - 1, blink);
 
