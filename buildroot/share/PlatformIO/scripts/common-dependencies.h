@@ -112,4 +112,7 @@
   #if ENABLED(AUTO_BED_LEVELING_UBL)
     #define HAS_MENU_UBL
   #endif
+  #if ENABLED(SHEETS_FEATURE)
+    #define HAS_MENU_SHEETS
+  #endif
 #endif
