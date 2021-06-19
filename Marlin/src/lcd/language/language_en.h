@@ -743,6 +743,11 @@ namespace Language_en {
 
   PROGMEM Language_Str MSG_SD_CARD                         = _UxGT("SD Card");
   PROGMEM Language_Str MSG_USB_DISK                        = _UxGT("USB Disk");
+
+  PROGMEM Language_Str MSG_SHEETS                          = _UxGT("Sheets");
+  PROGMEM Language_Str MSG_SHEET_ACTIVE                    = _UxGT("Active");
+  PROGMEM Language_Str MSG_SHEET_SETACTIVE                 = _UxGT("Set active");
+  PROGMEM Language_Str MSG_SHEET_ZOFFSET                   = _UxGT("Z offset");
 }
 
 #if FAN_COUNT == 1

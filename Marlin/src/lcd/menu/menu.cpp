@@ -300,6 +300,10 @@ void scroll_screen(const uint8_t limit, const bool is_menu) {
 
   #include "../../feature/babystep.h"
 
+  #if ENABLED(SHEETS_FEATURE)
+    #include "../../feature/sheets.h"
+  #endif
+
   void lcd_babystep_zoffset() {
     if (ui.use_click()) return ui.goto_previous_screen_no_defer();
     ui.defer_status_screen();
@@ -318,8 +322,13 @@ void scroll_screen(const uint8_t limit, const bool is_menu) {
 
         babystep.add_steps(Z_AXIS, babystep_increment);
 
-        if (do_probe)
+        if (do_probe) {
           probe.offset.z = new_offs;
+
+          #if ENABLED(SHEETS_FEATURE)
+            sheets.update_active_zoffset(probe.offset.z);
+          #endif
+        }
         else
           TERN(BABYSTEP_HOTEND_Z_OFFSET, hotend_offset[active_extruder].z = new_offs, NOOP);
 
