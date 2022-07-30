@@ -744,6 +744,11 @@ namespace Language_en {
   LSTR MSG_REMINDER_SAVE_SETTINGS         = _UxGT("Remember to Save!");
   LSTR MSG_PASSWORD_REMOVED               = _UxGT("Password Removed");
 
+  LSTR MSG_SHEETS                         = _UxGT("Sheets");
+  LSTR MSG_SHEET_ACTIVE                   = _UxGT("Active");
+  LSTR MSG_SHEET_SETACTIVE                = _UxGT("Set active");
+  LSTR MSG_SHEET_ZOFFSET                  = _UxGT("Z offset");
+
   //
   // Filament Change screens show up to 3 lines on a 4-line display
   //                        ...or up to 2 lines on a 3-line display
